@@ -17,4 +17,6 @@ public class MirrorInfo {
   float l;
   @XmlAttribute
   boolean block;
+  @XmlAttribute
+  int address;
 }

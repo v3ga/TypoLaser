@@ -5,10 +5,18 @@ import controlP5.*;
 import toxi.geom.*;
 import javax.xml.bind.*;
 import java.awt.event.KeyEvent;
+import processing.serial.*;
+import cc.arduino.*;
+
 
 
 // ----------------------------------------------
 PImage imgBackground;
+
+// ----------------------------------------------
+// Arduino
+Arduino arduino;
+
 
 // ----------------------------------------------
 // UI
@@ -19,9 +27,9 @@ ToolLaser toolLaser;
 ToolMirror toolMirror;
 
 // ----------------------------------------------
-GraphicItemManager graphicItems;
-ArrayList<Mirror> mirrors;
-ArrayList<Laser> lasers;
+GraphicItemManager graphicItems = new GraphicItemManager();
+ArrayList<Mirror> mirrors = new ArrayList<Mirror>();
+ArrayList<Laser> lasers = new ArrayList<Laser>();
 
 // ----------------------------------------------
 AppConfig appConfig;
@@ -35,17 +43,28 @@ void setup()
   size(1600, 600);
   smooth();
   frameRate(60);
-
-  graphicItems = new GraphicItemManager();
-
-  mirrors = new ArrayList<Mirror>();
-  lasers = new ArrayList<Laser>();
-
+  
+  initArduino(9); // change this
   initControls(true);
-  loadAppConfig("GRL.xml");
+  loadAppConfig("simple.xml");
+}
 
-  // Rays
-  updateLasersCast();
+
+// ----------------------------------------------
+// initArduino
+// ----------------------------------------------
+void initArduino(int port)
+{
+  // Prints out the available serial ports.
+  println(Arduino.list());
+  for (int i=0;i<Arduino.list().length;i++){
+    println(i+" - "+Arduino.list()[i]);
+  }
+  
+  if (port < Arduino.list().length)
+    arduino = new Arduino(this, Arduino.list()[port], 57600);
+  else
+    exit();
 }
 
 // ----------------------------------------------
@@ -77,12 +96,18 @@ void draw()
   toolManager.update();
   graphicItems.update();
 
+  drawBackground();
+  graphicItems.draw();
+  cp5.draw();
+}
+
+// ----------------------------------------------
+void drawBackground()
+{
   if (imgBackground != null)
     image(imgBackground, 0, 0); 
   else
     background(0);
-  graphicItems.draw();
-  cp5.draw();
 }
 
 // ----------------------------------------------
@@ -131,7 +156,7 @@ void updateLasersCast()
 void keyPressed()
 {
   if (key == ' ')
-    saveAppConfig("test.xml"); 
+    saveAppConfig("simple.xml"); 
 
   keys[keyCode] = true;
   if ( (checkKey(157) || checkKey(CONTROL) )  && checkKey(KeyEvent.VK_M))

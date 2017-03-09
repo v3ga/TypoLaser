@@ -12,6 +12,7 @@ class Mirror extends GraphicItem
   float angleDragStart;
   int type; // blocking, non blocking
   boolean block=false;
+  int address = -1;
 
   // Graphics
   color colorOut;
@@ -41,6 +42,7 @@ class Mirror extends GraphicItem
     this.pos = new Vec2D(data.x, data.y);
     this.line = new Line2D(new Vec2D(0, 0), new Vec2D(0, 0));
     this.length = data.l;
+    this.address = data.address;
     rotate(data.angle);
     setBlock(data.block);
 
@@ -121,6 +123,9 @@ class Mirror extends GraphicItem
     this.angle = angle;
     this.dir = Vec2D.fromTheta(radians(angle));
     update();
+    if (arduino != null && address>=0)
+      arduino.servoWrite(address, (int)constrain(angle,0,180.0)); // to be sure
+
   }
 
   // ----------------------------------------------
@@ -139,6 +144,14 @@ class Mirror extends GraphicItem
   {
     block = ok;
     updateLasersCast();
+  }
+
+  // ----------------------------------------------
+  void setArduinoAdress(int address_)
+  {
+    address = address_;
+    if (arduino != null && address>=0)
+      arduino.pinMode(address, Arduino.SERVO);
   }
 
   // ----------------------------------------------
@@ -218,6 +231,6 @@ class Mirror extends GraphicItem
   // ----------------------------------------------
   String toXML()
   {
-    return "<mirror id=\""+id+"\" l=\""+length+"\" x=\""+pos.x+"\" y=\""+pos.y+"\" angle=\""+angle+"\" block=\""+ (block ? "true" : "false") +"\" />\n";
+    return "<mirror id=\""+id+"\" address=\""+address+"\" l=\""+length+"\" x=\""+pos.x+"\" y=\""+pos.y+"\" angle=\""+angle+"\" block=\""+ (block ? "true" : "false") +"\" />\n";
   }
 }
