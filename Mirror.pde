@@ -123,7 +123,7 @@ class Mirror extends GraphicItem
     this.angle = angle;
     this.dir = Vec2D.fromTheta(radians(angle));
     update();
-    if (arduino != null && address>=0)
+    if (CONNECT_ARDUINO && arduino != null && address>=0)
       arduino.servoWrite(address, (int)constrain(angle,0,180.0)); // to be sure
 
   }
@@ -217,10 +217,8 @@ class Mirror extends GraphicItem
     if (checkKey(SHIFT))
     {
       float dx = mouseX-posMouseDragStart.x;
-      //rotate( angleDragStart + map(deltaMouseDrag.x,0,width,0,360) );
       rotate( angleDragStart + dx );
       toolMirror.updateControls();
-      //mirrorDescription.updateControls();
     }
     else 
       super.handleMouseDragged();

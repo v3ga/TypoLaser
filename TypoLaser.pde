@@ -7,11 +7,18 @@ import javax.xml.bind.*;
 import java.awt.event.KeyEvent;
 import processing.serial.*;
 import cc.arduino.*;
+import de.looksgood.ani.*;
+import de.looksgood.ani.easing.*;
 
+// ----------------------------------------------
+// Config
+boolean CONNECT_ARDUINO = false; // if true, uses Arduino 
 
 
 // ----------------------------------------------
 PImage imgBackground;
+Grid grid = new Grid();
+PVector gridMouse;
 
 // ----------------------------------------------
 // Arduino
@@ -44,11 +51,20 @@ void setup()
   smooth();
   frameRate(60);
   
-  initArduino(9); // change this
+  initLibs();
+  if (CONNECT_ARDUINO)
+    initArduino(9); // change this
   initControls(true);
   loadAppConfig("simple.xml");
 }
 
+// ----------------------------------------------
+// initLibs()
+// ----------------------------------------------
+void initLibs()
+{
+  Ani.init(this);
+}
 
 // ----------------------------------------------
 // initArduino
@@ -98,6 +114,7 @@ void draw()
 
   drawBackground();
   graphicItems.draw();
+    
   cp5.draw();
 }
 
@@ -108,6 +125,8 @@ void drawBackground()
     image(imgBackground, 0, 0); 
   else
     background(0);
+  if (isSnapToGrid())
+    grid.draw();
 }
 
 // ----------------------------------------------
@@ -116,6 +135,8 @@ void drawBackground()
 void mouseMoved()
 {
   graphicItems.mouseMoved();
+
+  gridMouse = grid.getClosestPoint(mouseX, mouseY);
 }
 
 // ----------------------------------------------

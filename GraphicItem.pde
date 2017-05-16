@@ -39,6 +39,10 @@ class GraphicItem
   void pos(float x, float y) {
   }
 
+  void pos(PVector p) {
+    pos(p.x, p.y);
+  }
+
   // ----------------------------------------------
   // mousePressed
   // ----------------------------------------------
@@ -68,7 +72,10 @@ class GraphicItem
   // ----------------------------------------------
   void handleMouseDragged()
   {
-    pos(mouseX-deltaMouseDrag.x, mouseY-deltaMouseDrag.y);
+    if (isSnapToGrid())
+      pos(grid.getClosestPoint(mouseX-deltaMouseDrag.x, mouseY-deltaMouseDrag.y));
+    else
+      pos(mouseX-deltaMouseDrag.x, mouseY-deltaMouseDrag.y);
   }
 
   // ----------------------------------------------

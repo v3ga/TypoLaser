@@ -1,6 +1,7 @@
 <config>
 	<!-- mirrors -->
-	<mirror id="0" address="4" l="60.000004" x="853.0" y="173.0" angle="92.00001" block="false" />
+	<mirror id="0" address="4" l="60.000004" x="197.14285" y="230.0" angle="135.0" block="false" />
+	<mirror id="" address="-1" l="54.0" x="509.28574" y="230.0" angle="45.0" block="false" />
 	<!-- lasers -->
-	<laser id="null" x="853.0" y="353.0" angle="0.0" />
+	<laser id="null" x="197.14285" y="427.14285" angle="0.0" />
 </config>
