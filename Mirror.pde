@@ -19,6 +19,10 @@ class Mirror extends GraphicItem
   color colorOver;
   color c;
 
+  // Animation
+  Ani angleAni;
+
+
   // ----------------------------------------------
   // Mirror
   // ----------------------------------------------
@@ -124,8 +128,7 @@ class Mirror extends GraphicItem
     this.dir = Vec2D.fromTheta(radians(angle));
     update();
     if (CONNECT_ARDUINO && arduino != null && address>=0)
-      arduino.servoWrite(address, (int)constrain(angle,0,180.0)); // to be sure
-
+      arduino.servoWrite(address, (int)constrain(angle, 0, 180.0)); // to be sure
   }
 
   // ----------------------------------------------
@@ -136,7 +139,7 @@ class Mirror extends GraphicItem
     this.length = l;
     update();
   }
-  
+
   // ----------------------------------------------
   // setLength
   // ----------------------------------------------
@@ -152,6 +155,20 @@ class Mirror extends GraphicItem
     address = address_;
     if (arduino != null && address>=0)
       arduino.pinMode(address, Arduino.SERVO);
+  }
+
+  // ----------------------------------------------
+  void interpolateTo(MirrorInfo other, float duration)
+  {
+    angleAni = new Ani(this, duration, 0.0, "angle", other.angle, Ani.LINEAR, this, "onUpdate:interpolateUpdate");          
+    angleAni.start();
+  }
+
+  // ----------------------------------------------
+  void interpolateUpdate()
+  {
+    rotate(this.angle);
+    updateLasersCast();
   }
 
   // ----------------------------------------------
@@ -219,9 +236,8 @@ class Mirror extends GraphicItem
       float dx = mouseX-posMouseDragStart.x;
       rotate( angleDragStart + dx );
       toolMirror.updateControls();
-    }
-    else 
-      super.handleMouseDragged();
+    } else 
+    super.handleMouseDragged();
   }
 
   // ----------------------------------------------

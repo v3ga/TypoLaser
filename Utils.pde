@@ -1,11 +1,59 @@
 // ----------------------------------------------
-// 
+// isSnapToGrid
 // ----------------------------------------------
 boolean isSnapToGrid()
 {
   return toolGlobals.bSnapToGrid;
 }
 
+// ----------------------------------------------
+// interpolateMirrorsTo
+// ----------------------------------------------
+void interpolateMirrorsTo(ArrayList<Mirror> mirrors, ArrayList<MirrorInfo> mirrorsInfos, float duration)
+{
+  for (Mirror mirror : mirrors)
+  {
+    MirrorInfo mirrorInfo = getMirrorInfoWithId(mirrorsInfos, mirror.id);
+    if (mirrorInfo != null)
+      mirror.interpolateTo(mirrorInfo, duration);
+  }
+}
+
+// ----------------------------------------------
+// getMirrorInfoWithId
+// ----------------------------------------------
+MirrorInfo getMirrorInfoWithId(ArrayList<MirrorInfo> mirrorsInfos, String id)
+{
+  for (MirrorInfo mirrorInfo : mirrorsInfos)
+  {
+    if (mirrorInfo.id.equals(id))
+      return mirrorInfo;
+  }
+  return null;
+}
+
+
+// ----------------------------------------------
+// createAppConfig
+// ----------------------------------------------
+AppConfig createAppConfig(String filename)
+{
+  AppConfig config = null;
+  try 
+  {
+    // setup object mapper using the AppConfig class
+    JAXBContext context = JAXBContext.newInstance(AppConfig.class);
+    // parse the XML and return an instance of the AppConfig class
+    config = (AppConfig) context.createUnmarshaller().unmarshal(createInput(filename));
+  }
+  catch(JAXBException e) {
+    // if things went wrong...
+    println("error parsing xml: ");
+    e.printStackTrace();
+    config = null;
+  }
+  return config;
+}
 
 // ----------------------------------------------
 // loadAppConfig

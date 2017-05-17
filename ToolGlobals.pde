@@ -5,8 +5,12 @@ class ToolGlobals extends Tool
   Toggle tgSnapToGrid;
   Slider sliderOpacityGrid;
   Slider sliderSizeGrid;
+  
+  
   boolean bSnapToGrid = false;
 
+  
+  
   // ----------------------------------------------
   ToolGlobals(PApplet p)
   {
@@ -19,7 +23,7 @@ class ToolGlobals extends Tool
     initTab("default", "Globals");
 
     // Globals
-    int x = 2;
+    int x = 4;
     int y = 30;
     int w = 140;
     int h = 18;
@@ -32,7 +36,27 @@ class ToolGlobals extends Tool
     sliderOpacityGrid = cp5.addSlider("opacityGrid", 0, 1.0, grid.opacity/255.0f, x+h+4, y, w, h).setLabel("opacity grid").addListener(this).setId(5);
     y+=2*h+4;
     sliderSizeGrid = cp5.addSlider("sizeGrid", 10.0, 40.0, grid.size, x, y, w, h).setLabel("size grid").addListener(this).setId(6);
+
+    Button btnSaveProperties = cp5.addButton("saveProps", 1, width-100-4, height-h-4, 100, h).setLabel("save properties").setId(7).addListener(this);
+
+
+    cp5.getProperties().move(tgSnapToGrid,      "default", "globals");
+    cp5.getProperties().move(sliderOpacityGrid, "default", "globals");
+    cp5.getProperties().move(sliderSizeGrid,    "default", "globals");
   }
+  
+  // --------------------------------------------------------------------
+  void saveProperties()
+  {
+    cp5.saveProperties(sketchPath("data/tools/globals.json"), "globals");
+  }
+
+  // --------------------------------------------------------------------
+  void loadProperties()
+  {
+    cp5.loadProperties(sketchPath("data/tools/globals.json"));
+  }
+  
 
   // ----------------------------------------------
   /*  void activateTab(String which)
@@ -44,7 +68,7 @@ class ToolGlobals extends Tool
   // ----------------------------------------------
   void controlEvent(ControlEvent theEvent)
   {
-    println( theEvent.getName() );
+//    println( theEvent.getName() );
 
     switch(theEvent.controller().getId())
     {
@@ -69,6 +93,10 @@ class ToolGlobals extends Tool
 
     case 6:
       grid.setSize( sliderSizeGrid.getValue() );
+      break;
+
+    case 7:
+      saveProperties();
       break;
     }
   }

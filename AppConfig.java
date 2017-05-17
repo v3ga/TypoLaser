@@ -12,4 +12,5 @@ public class AppConfig {
 
   @XmlElement(name="laser")
   ArrayList<LaserInfo> laserInfos = new ArrayList<LaserInfo>();
+
 }

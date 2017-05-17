@@ -18,7 +18,6 @@ boolean CONNECT_ARDUINO = false; // if true, uses Arduino
 // ----------------------------------------------
 PImage imgBackground;
 Grid grid = new Grid();
-PVector gridMouse;
 
 // ----------------------------------------------
 // Arduino
@@ -43,6 +42,12 @@ AppConfig appConfig;
 boolean[] keys = new boolean[526];
 
 // ----------------------------------------------
+// Temp (debug)
+AppConfig appConfigOther;
+
+
+
+// ----------------------------------------------
 // setup
 // ----------------------------------------------
 void setup()
@@ -56,6 +61,12 @@ void setup()
     initArduino(9); // change this
   initControls(true);
   loadAppConfig("simple.xml");
+  toolGlobals.loadProperties();
+  
+  appConfigOther = createAppConfig("simple_test.xml");
+
+//  cp5.getProperties().print();
+
 }
 
 // ----------------------------------------------
@@ -135,8 +146,6 @@ void drawBackground()
 void mouseMoved()
 {
   graphicItems.mouseMoved();
-
-  gridMouse = grid.getClosestPoint(mouseX, mouseY);
 }
 
 // ----------------------------------------------
@@ -178,6 +187,15 @@ void keyPressed()
 {
   if (key == ' ')
     saveAppConfig("simple.xml"); 
+
+  if (key == 's')
+    toolGlobals.saveProperties();
+
+  if (key == 'i')
+  {
+    interpolateMirrorsTo(mirrors, appConfigOther.mirrorInfos, 1.0);
+  }
+
 
   keys[keyCode] = true;
   if ( (checkKey(157) || checkKey(CONTROL) )  && checkKey(KeyEvent.VK_M))

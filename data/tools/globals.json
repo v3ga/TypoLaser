@@ -1,0 +1,13 @@
+{
+  "/sizeGrid": {
+    "min": 10,
+    "max": 40,
+    "value": 19
+  },
+  "/opacityGrid": {
+    "min": 0,
+    "max": 1,
+    "value": 0.24285714328289032
+  },
+  "/bSnapToGrid": {"value": 1}
+}

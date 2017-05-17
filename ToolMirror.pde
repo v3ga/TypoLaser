@@ -1,5 +1,7 @@
 class ToolMirror extends Tool
 {
+  
+  Textfield txtId;
   Mirror current;
   Slider sliderRotation;
   Slider sliderLength;
@@ -28,6 +30,8 @@ class ToolMirror extends Tool
   {
     initTab("mirror", "mirror");
 
+    
+  
     sliderRotation = cp5.addSlider("mirror_angle").setRange(0.0, 180.0)
       .setLabel("angle").moveTo("mirror")
       .setWidth(360).setHeight(15)
@@ -49,8 +53,16 @@ class ToolMirror extends Tool
     txtAddress = cp5.addTextfield("mirror_address")
       .setLabel("arduino address").moveTo("mirror")
       .setAutoClear(false)
-      .setPosition(toggleBlock.getPosition()[0]+2, toggleBlock.getPosition()[1]+30).setWidth(30)
+      .setPosition(toggleBlock.getPosition()[0]+2, toggleBlock.getPosition()[1]+40).setWidth(30)
       .addListener(this);
+
+    txtId = cp5.addTextfield("mirror_id")
+      .setLabel("id").moveTo("mirror")
+      .setAutoClear(false)
+      .addListener(this)
+      .setPosition(txtAddress.getPosition()[0], txtAddress.getPosition()[1]+40).setWidth(30)
+      .linebreak();
+
 }
 
   // ----------------------------------------------
@@ -58,6 +70,7 @@ class ToolMirror extends Tool
   {
     if (current != null)
     {
+      txtId.setValue( current.id );
       sliderRotation.setValue( current.angle );
       sliderLength.setValue( current.length );
       toggleBlock.setValue( current.block );
@@ -85,6 +98,10 @@ class ToolMirror extends Tool
     {
       if (current != null) current.setArduinoAdress( int(theEvent.getStringValue()) );
 //      println( int(theEvent.getStringValue()) );
+    }
+    else if (name.equals("mirror_id"))
+    {
+      if (current != null) current.id = theEvent.getStringValue() ;
     }
   }
 }
